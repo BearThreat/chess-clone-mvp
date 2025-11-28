@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Chess MVP</title>
+    <link rel="stylesheet" href="styles.css" />
+</head>
+
+<body>
+    <div class="app">
+        <header class="header">
+            <h1>♟️ Chess</h1>
+            <div class="controls">
+                <button id="newGameBtn" class="btn">New Game</button>
+            </div>
+        </header>
+
+        <main class="main">
+            <section class="side">
+                <div class="status">
+                    <div><strong>Turn:</strong> <span id="turnText">White</span></div>
+                    <div id="stateText"></div>
+                </div>
+                <div class="legend">
+                    <div class="legend-item"><span class="badge badge-sel"></span> Selected</div>
+                    <div class="legend-item"><span class="badge badge-move"></span> Legal move</div>
+                    <div class="legend-item"><span class="badge badge-cap"></span> Capture</div>
+                    <div class="legend-item"><span class="badge badge-chk"></span> In check</div>
+                </div>
+            </section>
+
+            <section class="board-wrap">
+                <div id="board" class="board" aria-label="Chess board" role="grid"></div>
+                <div class="axis axis-files">
+                    <span>a</span><span>b</span><span>c</span><span>d</span><span>e</span><span>f</span><span>g</span><span>h</span>
+                </div>
+                <div class="axis axis-ranks">
+                    <span>8</span><span>7</span><span>6</span><span>5</span><span>4</span><span>3</span><span>2</span><span>1</span>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Promotion Modal -->
+    <div id="promotionModal" class="modal hidden" aria-hidden="true">
+        <div class="modal-content">
+            <h2>Choose promotion</h2>
+            <div class="promo-options">
+                <button class="promo-btn" data-piece="q">♕/♛</button>
+                <button class="promo-btn" data-piece="r">♖/♜</button>
+                <button class="promo-btn" data-piece="b">♗/♝</button>
+                <button class="promo-btn" data-piece="n">♘/♞</button>
+            </div>
+            <button id="cancelPromoBtn" class="btn btn-secondary">Cancel</button>
+        </div>
+    </div>
+
+    <script defer src="main.js"></script>
+</body>
+
+</html>

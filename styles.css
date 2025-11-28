@@ -1,0 +1,415 @@
+/* Chess MVP Styles */
+:root {
+    /* Square size scales responsively but stays crisp */
+    --square: clamp(56px, 9.5vmin, 84px);
+
+    /* Board colors - standardized distinct colors */
+    --light: #f0d9b5;
+    --dark: #b58863;
+
+    /* Highlights */
+    --selected: rgba(255, 255, 51, 0.6);
+    --move-dest: rgba(20, 85, 30, 0.3);
+    /* hint dot */
+    --capture: rgba(200, 50, 50, 0.5);
+    /* capture ring */
+
+    /* UI Colors */
+    --bg-1: #161512;
+    --bg-2: #262421;
+    --text: #ffffff;
+    --text-sec: #bababa;
+    --accent: #81b64c;
+    --accent-hover: #a3d160;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+html,
+body {
+    height: 100%;
+}
+
+body {
+    margin: 0;
+    background: var(--bg-1);
+    color: var(--text);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    display: grid;
+    place-items: center;
+}
+
+.app {
+    display: grid;
+    gap: 24px;
+    /* Layout: header on top or side? Let's stick to centered column for MVP stability but nice look */
+    width: min(100%, 1000px);
+    padding: 20px;
+}
+
+/* Header */
+.header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.header h1 {
+    margin: 0;
+    font-weight: 800;
+    font-size: 32px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.header h1::before {
+    content: "♟";
+    font-size: 40px;
+    color: var(--text);
+}
+
+.controls {
+    display: flex;
+    gap: 12px;
+}
+
+.btn {
+    background: var(--accent);
+    color: #fff;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 6px;
+    font-size: 16px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background 0.15s ease, transform 0.1s ease;
+    box-shadow: 0 4px 0 rgba(0, 0, 0, 0.2);
+}
+
+.btn:hover {
+    background: var(--accent-hover);
+    transform: translateY(-2px);
+}
+
+.btn:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 0 rgba(0, 0, 0, 0.2);
+}
+
+.btn-secondary {
+    background: #444;
+    box-shadow: 0 4px 0 #222;
+}
+
+.btn-secondary:hover {
+    background: #555;
+}
+
+/* Main Layout */
+.main {
+    display: grid;
+    grid-template-columns: 300px 1fr;
+    gap: 32px;
+    align-items: start;
+}
+
+/* Sidebar */
+.side {
+    background: var(--bg-2);
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.status {
+    margin-bottom: 24px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    font-size: 18px;
+}
+
+.status div strong {
+    color: var(--text-sec);
+    font-weight: 600;
+    margin-right: 8px;
+}
+
+#turnText {
+    font-weight: 700;
+}
+
+#stateText {
+    margin-top: 8px;
+    font-size: 16px;
+    color: #ffd93d;
+    min-height: 24px;
+}
+
+.legend {
+    display: grid;
+    gap: 12px;
+    font-size: 14px;
+    color: var(--text-sec);
+}
+
+.legend-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.badge {
+    width: 20px;
+    height: 20px;
+    border-radius: 4px;
+    border: 2px solid transparent;
+    box-sizing: border-box;
+}
+
+.badge-sel {
+    border-color: #ffeb3b;
+    background: rgba(255, 235, 59, 0.2);
+}
+
+.badge-move {
+    border-color: #7fff00;
+    background: transparent;
+    position: relative;
+}
+
+.badge-move::after {
+    content: "";
+    position: absolute;
+    width: 8px;
+    height: 8px;
+    background: #7fff00;
+    border-radius: 50%;
+    top: 4px;
+    left: 4px;
+}
+
+.badge-cap {
+    border-color: #ff5252;
+}
+
+.badge-chk {
+    border-color: #ff1744;
+    background: rgba(255, 23, 68, 0.2);
+}
+
+/* Board */
+.board-wrap {
+    user-select: none;
+    /* centering in the column */
+    justify-self: center;
+    position: relative;
+}
+
+.board {
+    display: grid;
+    grid-template-columns: repeat(8, var(--square));
+    grid-template-rows: repeat(8, var(--square));
+    border: 4px solid #333;
+    border-radius: 4px;
+}
+
+.square {
+    width: var(--square);
+    height: var(--square);
+    position: relative;
+    display: grid;
+    place-items: center;
+    font-size: calc(var(--square) * 0.85);
+    line-height: 1;
+    cursor: pointer;
+}
+
+/* Colors */
+.square.light {
+    background-color: var(--light);
+}
+
+.square.dark {
+    background-color: var(--dark);
+}
+
+/* Piece Styling */
+.piece {
+    z-index: 2;
+    cursor: pointer;
+    /* Indicate clickable */
+}
+
+/* White Pieces */
+.piece.w {
+    color: #fff;
+    text-shadow:
+        1px 1px 0 #000,
+        -1px -1px 0 #000,
+        1px -1px 0 #000,
+        -1px 1px 0 #000,
+        1px 0 0 #000,
+        -1px 0 0 #000,
+        0 1px 0 #000,
+        0 -1px 0 #000,
+        0 2px 4px rgba(0, 0, 0, 0.4);
+    filter: drop-shadow(0 2px 3px rgba(0, 0, 0, 0.3));
+}
+
+/* Black Pieces */
+.piece.b {
+    color: #000;
+    text-shadow:
+        1px 1px 0 #fff,
+        -1px -1px 0 #fff,
+        1px -1px 0 #fff,
+        -1px 1px 0 #fff,
+        1px 0 0 #fff,
+        -1px 0 0 #fff,
+        0 1px 0 #fff,
+        0 -1px 0 #fff,
+        0 2px 4px rgba(0, 0, 0, 0.4);
+    filter: drop-shadow(0 2px 3px rgba(0, 0, 0, 0.3));
+}
+
+/* Highlights */
+.square.selected {
+    background-color: var(--selected) !important;
+}
+
+.square.legal::after {
+    content: "";
+    width: 25%;
+    height: 25%;
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 50%;
+    display: block;
+    z-index: 1;
+}
+
+/* Dark square hints darker, light square hints lighter? 
+   Actually semi-transparent black is standard for hints */
+
+.square.capture::after {
+    content: "";
+    width: 85%;
+    height: 85%;
+    border: 6px solid rgba(0, 0, 0, 0.2);
+    border-radius: 50%;
+    position: absolute;
+    z-index: 1;
+}
+
+.square.in-check {
+    background: radial-gradient(ellipse at center, rgb(255, 0, 0) 0%, rgba(231, 0, 0, 0.5) 60%, rgba(169, 0, 0, 0) 100%);
+}
+
+/* Coordinate Axes */
+.axis {
+    position: absolute;
+    color: var(--text-sec);
+    font-size: 12px;
+    font-weight: 600;
+    pointer-events: none;
+}
+
+.axis-files {
+    display: flex;
+    justify-content: space-around;
+    width: 100%;
+    bottom: -24px;
+    left: 0;
+}
+
+.axis-files span {
+    width: var(--square);
+    text-align: center;
+}
+
+.axis-ranks {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    height: 100%;
+    top: 0;
+    left: -20px;
+}
+
+.axis-ranks span {
+    height: var(--square);
+    display: grid;
+    place-items: center;
+}
+
+/* Modal */
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.7);
+    display: grid;
+    place-items: center;
+    z-index: 100;
+    backdrop-filter: blur(2px);
+}
+
+.modal.hidden {
+    display: none;
+}
+
+.modal-content {
+    background: var(--bg-2);
+    padding: 24px;
+    border-radius: 12px;
+    text-align: center;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+}
+
+.modal-content h2 {
+    margin-top: 0;
+    color: var(--text);
+}
+
+.promo-options {
+    display: flex;
+    gap: 16px;
+    margin: 24px 0;
+}
+
+.promo-btn {
+    background: #333;
+    border: 2px solid #555;
+    border-radius: 8px;
+    font-size: 40px;
+    color: #fff;
+    width: 64px;
+    height: 64px;
+    cursor: pointer;
+    display: grid;
+    place-items: center;
+}
+
+.promo-btn:hover {
+    background: var(--accent);
+    border-color: var(--accent);
+}
+
+/* Responsive */
+@media (max-width: 800px) {
+    .main {
+        grid-template-columns: 1fr;
+    }
+
+    .side {
+        order: 2;
+    }
+
+    .board-wrap {
+        order: 1;
+    }
+}
